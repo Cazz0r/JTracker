@@ -338,6 +338,12 @@ Issue with application settings (such as "Start with windows") not being persist
 - Made sure that FindMissionAccept looked at the current journal file just incase we restart the JTracker *this* session.
 - Made some alterations to the F3 "Display Missions" output, it's a little prettier now and more sane.
 
+1.1.07:
+- Fixed the FindMissionAccept error when it was re-opening the current file. It now plays nicely.
+
+1.1.08:
+- Accidently released 1.1.07 as a debug version, I am noob.
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -436,7 +442,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.06"; //Version Number
+            public static string version = "1.1.08"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -1949,7 +1955,6 @@ namespace EIC_Tracker
 
                                 break;
                             case "MissionCompleted":
-
                                 string missionreward = "0";
                                 if (line.Reward != null)
                                 {
@@ -2486,7 +2491,7 @@ namespace EIC_Tracker
                     string line;
                     string CurrentSystem = "";
 
-                    System.IO.StreamReader file = new System.IO.StreamReader(Globals.journalDir + "\\" + myFile.Name);
+                    System.IO.StreamReader file = new StreamReader(File.Open(Globals.journalDir + "\\" + myFile.Name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                     while ((line = file.ReadLine()) != null)
                     {
                         try
