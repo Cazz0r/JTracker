@@ -1723,9 +1723,6 @@
   <data name="btnBGS.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopCenter</value>
   </data>
-  <data name="btnBGS.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="&gt;&gt;btnBGS.Name" xml:space="preserve">
     <value>btnBGS</value>
   </data>

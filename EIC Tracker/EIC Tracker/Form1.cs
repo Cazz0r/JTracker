@@ -344,6 +344,12 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.08:
 - Accidently released 1.1.07 as a debug version, I am noob.
 
+1.1.09: TRUDER
+- Fixed yet another issue with the BGS button not show. Prevented all the buttons from being hidden, ever.
+
+1.1.10: 
+- Forgot to increment the version number. Working too fast... 
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -442,7 +448,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.08"; //Version Number
+            public static string version = "1.1.10"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -664,9 +670,9 @@ namespace EIC_Tracker
             */
 
             //Make sure the buttons that require permissions aren't showing.
-            btnBGS.Visible = false;
-            btnSales.Visible = false;
-            btnHero.Visible = false;
+            btnBGS.Visible = true;
+            btnSales.Visible = true;
+            btnHero.Visible = true;
 
 
             //Settings weren't being saved when upgrading versions, found some code that describes a good way to handle this: http://stackoverflow.com/questions/534261/how-do-you-keep-user-config-settings-across-different-assembly-versions-in-net/534335#534335
