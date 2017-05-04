@@ -334,6 +334,10 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.05:
 - Attempted fix of the BGS button not being shown.
 
+1.1.06:
+- Made sure that FindMissionAccept looked at the current journal file just incase we restart the JTracker *this* session.
+- Made some alterations to the F3 "Display Missions" output, it's a little prettier now and more sane.
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -432,7 +436,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.05"; //Version Number
+            public static string version = "1.1.06"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -2474,7 +2478,9 @@ namespace EIC_Tracker
             foreach (FileInfo myFile in sortedFiles)
             {
                 //Looping through the journal files, read the file line by line.
-                if (myFile.Name != Globals.journalFile)
+                //Read the current journal just in case we restarted the JTracker AFTER accepting missions in this journal file, they wouldn't be known to us as they wouldn't have been within the timestamp parameters.
+                //if (myFile.Name != Globals.journalFile)
+                if (true)
                 {
 
                     string line;
@@ -2615,12 +2621,15 @@ namespace EIC_Tracker
             }
             if (e.KeyCode.ToString() == "F3")
             {
-                string html = "<h4>Missions:</h4>";
+                string html = "<h4>Missions:</h4>" + 
+                    "<table class='table table-condensed'><thead><tr><th>Mission ID</th><th>Accepted In</th><th>Destination System</th><th>Completed In</th><th>Mission Type</th><th>Mission Name</th></tr></thead><tbody>";
 
                 foreach (DataRow row in dataSystems.Tables["Missions"].Rows)
                 {
-                    html = html + row["MissionID"] + "," + row["AcceptedIn"] + "," + row["DestinationSystem"] + "," + row["CompletedIn"] + "<br>";
+                    html = html + "<tr>" + "<td>" + row["MissionID"] + "</td><td>" + row["AcceptedIn"] + "</td><td>" + row["DestinationSystem"] + "</td><td>" + row["CompletedIn"] + "</td>" + "</td><td>" + row["MissionType"] + "</td>" + "</td><td>" + row["MissionName"] + "</td>" + "</tr>";
+                    //html = html + row["MissionID"] + "," + row["AcceptedIn"] + "," + row["DestinationSystem"] + "," + row["CompletedIn"] + "<br>";
                 }
+                html = html + "</tbody></table>";
                 wb.Document.GetElementById("body-container").InnerHtml = html;
             }
             if (e.KeyCode.ToString() == "F4")
