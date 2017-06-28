@@ -350,6 +350,12 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.10: 
 - Forgot to increment the version number. Working too fast... 
 
+1.1.11:
+- Added "Narcotics"
+
+1.1.12:
+- Looks like FDEV Changed the RedeemVoucher event "Factions" to "Faction". Fixed the event so that the benefiting faction is passed.
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -448,7 +454,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.10"; //Version Number
+            public static string version = "1.1.12"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -2178,8 +2184,15 @@ namespace EIC_Tracker
                                         }
                                         else
                                         {
-                                            //No Factions :(
-                                            TrackData(Globals.cursystem.ToUpper(), "BH", Convert.ToInt64(line.Amount), "");
+                                            if (line.Faction != null)
+                                            {
+                                                TrackData(Globals.cursystem.ToUpper(), "BH", Convert.ToInt64(line.Amount), (string)line.Faction);
+                                            }
+                                            else
+                                            {
+                                                //No Factions :(
+                                                TrackData(Globals.cursystem.ToUpper(), "BH", Convert.ToInt64(line.Amount), "");
+                                            }
                                         }
 
                                         break;
@@ -2216,8 +2229,15 @@ namespace EIC_Tracker
                                         }
                                         else
                                         {
-                                            //No Factions :(
-                                            TrackData(Globals.cursystem.ToUpper(), "CZ", Convert.ToInt64(line.Amount), "");
+                                            if (line.Faction != null)
+                                            {
+                                                TrackData(Globals.cursystem.ToUpper(), "CZ", Convert.ToInt64(line.Amount), (string)line.Faction);
+                                            }
+                                            else
+                                            {
+                                                //No Factions :(
+                                                TrackData(Globals.cursystem.ToUpper(), "CZ", Convert.ToInt64(line.Amount), "");
+                                            }
                                         }
 
 
@@ -3248,6 +3268,7 @@ namespace EIC_Tracker
             cmbCommodity.Items.Add("Moissanite");
             cmbCommodity.Items.Add("Mu Tom Imager");
             cmbCommodity.Items.Add("Nanobreakers");
+            cmbCommodity.Items.Add("Narcotics");
             cmbCommodity.Items.Add("Natural Fabrics");
             cmbCommodity.Items.Add("Neofabric Insulation");
             cmbCommodity.Items.Add("Nerve Agents");
