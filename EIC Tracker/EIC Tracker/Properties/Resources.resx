@@ -10394,4 +10394,7 @@
   <data name="button_Hero" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\button-Hero.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="button_Trade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\button-Trade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

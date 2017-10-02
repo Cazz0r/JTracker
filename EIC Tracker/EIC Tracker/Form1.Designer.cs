@@ -865,6 +865,7 @@
             this.lblDonate.ForeColor = System.Drawing.SystemColors.Control;
             this.lblDonate.Name = "lblDonate";
             this.lblDonate.Anchor = (System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Bottom);
+            this.lblDonate.Visible = false;
             // 
             // btnDonate
             // 
@@ -877,6 +878,7 @@
             this.btnDonate.UseVisualStyleBackColor = false;
             this.btnDonate.Click += new System.EventHandler(this.btnDonate_Click);
             this.btnDonate.Anchor = (System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Bottom);
+            this.btnDonate.Visible = false;
             // 
             // label7
             // 
@@ -887,6 +889,7 @@
             this.label7.Font = lblDonate.Font;
             this.label7.Location = new System.Drawing.Point(this.label7.Location.X, lblDonate.Location.Y);
             this.label7.Anchor = (System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Bottom);
+            this.label7.Visible = false;
             // 
             // textBox1
             // 
@@ -895,6 +898,7 @@
             this.textBox1.ForeColor = System.Drawing.Color.White;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
+            this.textBox1.Visible = false;
             // 
             // tabControl
             // 
@@ -905,6 +909,7 @@
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.tabControl.Size = new System.Drawing.Size(this.tabControl.Size.Width, 400);
             // 
             // tabMain
             // 
@@ -995,7 +1000,7 @@
             this.btnSales.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Black;
             resources.ApplyResources(this.btnSales, "btnSales");
             this.btnSales.ForeColor = System.Drawing.Color.White;
-            this.btnSales.Image = global::EIC_Tracker.Properties.Resources.button_Sales;
+            this.btnSales.Image = global::EIC_Tracker.Properties.Resources.button_Trade;
             this.btnSales.Name = "btnSales";
             this.btnSales.UseVisualStyleBackColor = true;
             this.btnSales.Click += new System.EventHandler(this.btnSales_Click);

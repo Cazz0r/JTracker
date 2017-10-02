@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>ftp://eicgaming.com/</PublishUrl>
+    <PublishUrl>ftp://192.241.251.130/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -23,16 +23,16 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://eicgaming.com/jtracker/</InstallUrl>
-    <UpdateUrl>http://eicgaming.com/jtracker/</UpdateUrl>
+    <InstallUrl>http://jtracker.eicgaming.com/</InstallUrl>
+    <UpdateUrl>http://jtracker.eicgaming.com/</UpdateUrl>
     <ProductName>EIC Journal Tracker</ProductName>
     <PublisherName>EIC Gaming</PublisherName>
-    <MinimumRequiredVersion>1.0.98.1</MinimumRequiredVersion>
+    <MinimumRequiredVersion>1.1.14.2</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.1.12.%2a</ApplicationVersion>
+    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationVersion>1.1.14.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -179,6 +179,7 @@
   <ItemGroup>
     <Content Include="EIC-16-wide.ico" />
     <Content Include="eic_logo_48.ico" />
+    <None Include="Resources\button-Trade.png" />
     <None Include="Resources\button-Hero.png" />
     <None Include="Resources\button-Help.png" />
     <None Include="Resources\button-Sales.png" />

@@ -133,6 +133,16 @@ namespace EIC_Tracker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap button_Trade {
+            get {
+                object obj = ResourceManager.GetObject("button_Trade", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap EIC_50_wide {
             get {
                 object obj = ResourceManager.GetObject("EIC-50-wide", resourceCulture);
