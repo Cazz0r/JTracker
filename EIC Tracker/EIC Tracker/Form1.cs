@@ -369,6 +369,9 @@ Issue with application settings (such as "Start with windows") not being persist
 - Changed URLs to use HTTPS
 - Fixed IFF to not fire during wing channel text.
 
+1.1.16:
+- Fixed IFF from firing when To = "Local", WTB Channel for SendText event.
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -467,7 +470,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.15"; //Version Number
+            public static string version = "1.1.16"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -1684,7 +1687,7 @@ namespace EIC_Tracker
                                         }
                                         else if (line.To != null)
                                         {
-                                            if (line.To != "Local" && line.To != "Wing" && line.To != "wing")
+                                            if (line.To.ToUpper() != "LOCAL" && line.To.ToUpper() != "WING")
                                             {
                                                 Who = line.To;
                                             }
