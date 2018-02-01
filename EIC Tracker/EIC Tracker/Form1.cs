@@ -372,6 +372,15 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.16:
 - Fixed IFF from firing when To = "Local", WTB Channel for SendText event.
 
+1.1.17:
+- Changed to use EIC's OVH server.
+
+1.1.18:
+- Changed HTTPS urls to HTTP to attempt to resolve a certificate issue.
+
+1.1.19:
+- Added Commodity Type to MarketSell & MarketBuy events so that we can track the commodities bought and sold not just the credits.
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -470,7 +479,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.16"; //Version Number
+            public static string version = "1.1.19"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -772,7 +781,7 @@ namespace EIC_Tracker
                     //btnCommodity.Visible = true;
                 }
 
-                wb.Navigate("https://tracker.eicgaming.com/welcome.php?CMDR=" + Globals.cmdr + "&Version=" + Globals.version);
+                wb.Navigate("http://tracker.eicgaming.com/welcome.php?CMDR=" + Globals.cmdr + "&Version=" + Globals.version);
                 wb2.Navigate("about:blank");
 
 
@@ -1295,7 +1304,7 @@ namespace EIC_Tracker
                     //Loading is now done when the button is clicked.
                     //Load the BGS Control Centre
                     //if (wbBGS.IsBusy) wbBGS.Stop();
-                    //wbBGS.Navigate("https://tracker.eicgaming.com/BGS.php?CMDR=" + Globals.cmdr); //It's read-only data anyway.
+                    //wbBGS.Navigate("http://tracker.eicgaming.com/BGS.php?CMDR=" + Globals.cmdr); //It's read-only data anyway.
 
                     
                 }
@@ -1307,7 +1316,7 @@ namespace EIC_Tracker
                     //Loading is now down when the button is clicked.
                     //Load the Sales Control Centre
                     //if (wbSales.IsBusy) wbSales.Stop();
-                    //wbBGS.Navigate("https://tracker.eicgaming.com/sales.php?CMDR=" + Globals.cmdr); //It's read-only data anyway.
+                    //wbBGS.Navigate("http://tracker.eicgaming.com/sales.php?CMDR=" + Globals.cmdr); //It's read-only data anyway.
                 }
             }
             else
@@ -1368,9 +1377,9 @@ namespace EIC_Tracker
             //Send data slow.
 
 #if DEBUG
-            string url = "https://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
+            string url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
 #else
-            string url = "https://tracker.eicgaming.com/trackdata.php?CMDR=" + Globals.cmdr;
+            string url = "http://tracker.eicgaming.com/trackdata.php?CMDR=" + Globals.cmdr;
 #endif
 
             if (dataSystems.Tables["Tracking"].Rows.Count > 0)
@@ -1501,7 +1510,7 @@ namespace EIC_Tracker
                             wbBGS.Stop();
                         }
                         
-                        wbBGS.Navigate("https://tracker.eicgaming.com/permission.php?CMDR=" + Globals.cmdr + "&Version=" + Globals.version);
+                        wbBGS.Navigate("http://tracker.eicgaming.com/permission.php?CMDR=" + Globals.cmdr + "&Version=" + Globals.version);
                     }
                     
 
@@ -1777,7 +1786,7 @@ namespace EIC_Tracker
                                     string postData = "Discovered=" + line.Discovered;
                                     System.Text.Encoding encoding = System.Text.Encoding.UTF8;
                                     byte[] bytes = encoding.GetBytes(postData);
-                                    string url = "https://tracker.eicgaming.com/exploration.php?CMDR=" + Globals.cmdr;
+                                    string url = "http://tracker.eicgaming.com/exploration.php?CMDR=" + Globals.cmdr;
                                     wb.Navigate(url, string.Empty, bytes, "Content-Type: application/x-www-form-urlencoded");
                                     
                                    //*/
@@ -1996,7 +2005,7 @@ namespace EIC_Tracker
                                     //MessageBox.Show(line.Commodity_Localised);
                                     cmbCommodity.SelectedItem = line.Commodity_Localised;
                                     //MessageBox.Show(cmbCommodity.SelectedItem.ToString());
-                                    //wb.Navigate("https://tracker.eicgaming.com/commodity.php?CMDR=" + Globals.cmdr + "&Commodity=" + line.Commodity_Localised + "&Station=" + Globals.curstation);
+                                    //wb.Navigate("http://tracker.eicgaming.com/commodity.php?CMDR=" + Globals.cmdr + "&Commodity=" + line.Commodity_Localised + "&Station=" + Globals.curstation);
                                 }
 
 
@@ -2135,7 +2144,7 @@ namespace EIC_Tracker
 
                                 //Track the buying of trade goods
                                 //public void TrackData(string SystemName, string what, long value, string who, string extra = "")
-                                TrackData(Globals.cursystem.ToUpper(), "Trade", Convert.ToInt64(line.Count), Globals.curstationfaction, (string)line.TotalCost);
+                                TrackData(Globals.cursystem.ToUpper(), "Trade", Convert.ToInt64(line.Count), Globals.curstationfaction, (string)line.TotalCost, (string)line.Type);
 
                                 break;
                             case "MarketSell":
@@ -2173,11 +2182,11 @@ namespace EIC_Tracker
                                 if (line.StolenGoods == "true")
                                 {
                                     //Track the selling of stolen goods (pawned)
-                                    TrackData(Globals.cursystem.ToUpper(), "Pawned", Convert.ToInt64(line.Count), Globals.curstationfaction, (string)line.TotalSale);
+                                    TrackData(Globals.cursystem.ToUpper(), "Pawned", Convert.ToInt64(line.Count), Globals.curstationfaction, (string)line.TotalSale, (string)line.Type);
                                 }else
                                 {
                                     //Track the selling of trade goods
-                                    TrackData(Globals.cursystem.ToUpper(), "Trade", Convert.ToInt64(line.Count), Globals.curstationfaction, (string)line.TotalSale);
+                                    TrackData(Globals.cursystem.ToUpper(), "Trade", Convert.ToInt64(line.Count), Globals.curstationfaction, (string)line.TotalSale, (string)line.Type);
                                 }
 
                                 break;
@@ -2759,7 +2768,7 @@ namespace EIC_Tracker
             if (txtIFF.Text != "")
             {
                 //Add a completed handler so that we know when to submit the form.
-                var url = "https://tracker.eicgaming.com/commander.php?CMDR=" + Globals.cmdr + "&x=" + Globals.cursystemx + "&y=" + Globals.cursystemy + "&z=" + Globals.cursystemz + "&System=" + Globals.cursystem + "&Version=" + Globals.version;
+                var url = "http://tracker.eicgaming.com/commander.php?CMDR=" + Globals.cmdr + "&x=" + Globals.cursystemx + "&y=" + Globals.cursystemy + "&z=" + Globals.cursystemz + "&System=" + Globals.cursystem + "&Version=" + Globals.version;
                 DisplayHtml("<form action='" + url + "' method='post' id='IFFForm'><textarea name='IFF' style='display:none'>" + txtIFF.Text + "</textarea><input type='hidden' name='journal' value='" + Globals.journalFile + "'><input type='hidden' name='version' value='" + Globals.version + "'><input type='submit'></form>", "1");
             }
         }
@@ -2807,7 +2816,7 @@ namespace EIC_Tracker
                 }
 
 
-                var url = "https://tracker.eicgaming.com/commodity.php?CMDR=" + Globals.cmdr + "&Commodity=" + commtext + "&x=" + Globals.cursystemx + "&y=" + Globals.cursystemy + "&z=" + Globals.cursystemz + "&System=" + Globals.cursystem + "&Version=" + Globals.version;
+                var url = "http://tracker.eicgaming.com/commodity.php?CMDR=" + Globals.cmdr + "&Commodity=" + commtext + "&x=" + Globals.cursystemx + "&y=" + Globals.cursystemy + "&z=" + Globals.cursystemz + "&System=" + Globals.cursystem + "&Version=" + Globals.version;
                 if (Globals.curstation != "")
                 {
                     url = url + "&Station=" + Globals.curstation;
@@ -3035,7 +3044,7 @@ namespace EIC_Tracker
                 }
             }else
             {
-                DisplayHtml("Update Check Failed. JTracker is in stand-alone mode, it won't receive any updates, please re-install.<br><br><a href=\"https://jtracker.eicgaming.com/setup.exe\" target=\"_blank\">https://jtracker.eicgaming.com/setup.exe</a>", BrowserOutput);
+                DisplayHtml("Update Check Failed. JTracker is in stand-alone mode, it won't receive any updates, please re-install.<br><br><a href=\"http://jtracker.eicgaming.com/setup.exe\" target=\"_blank\">http://jtracker.eicgaming.com/setup.exe</a>", BrowserOutput);
             }
         }
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -3111,16 +3120,16 @@ namespace EIC_Tracker
             switch (tab)
             {
                 case "BGS":
-                    wbBGS.Navigate("https://tracker.eicgaming.com/BGS.php?CMDR=" + Globals.cmdr);
+                    wbBGS.Navigate("http://tracker.eicgaming.com/BGS.php?CMDR=" + Globals.cmdr);
                     break;
                 case "Help":
-                    wbBGS.Navigate("https://tracker.eicgaming.com/help.php?CMDR=" + Globals.cmdr);
+                    wbBGS.Navigate("http://tracker.eicgaming.com/help.php?CMDR=" + Globals.cmdr);
                     break;
                 case "Hero":
-                    wbBGS.Navigate("https://tracker.eicgaming.com/hero.php?CMDR=" + Globals.cmdr);
+                    wbBGS.Navigate("http://tracker.eicgaming.com/hero.php?CMDR=" + Globals.cmdr);
                     break;
                 case "Sales":
-                    wbBGS.Navigate("https://tracker.eicgaming.com/sales.php?CMDR=" + Globals.cmdr);
+                    wbBGS.Navigate("http://tracker.eicgaming.com/sales.php?CMDR=" + Globals.cmdr);
                     break;
             }
         }
@@ -3147,7 +3156,7 @@ namespace EIC_Tracker
             {
                 wbSales.Stop();
             }
-            wbSales.Navigate("https://tracker.eicgaming.com/sales.php?CMDR=" + Globals.cmdr);
+            wbSales.Navigate("http://tracker.eicgaming.com/sales.php?CMDR=" + Globals.cmdr);
             */
         }
 
