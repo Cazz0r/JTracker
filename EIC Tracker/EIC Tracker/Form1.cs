@@ -381,6 +381,12 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.19:
 - Added Commodity Type to MarketSell & MarketBuy events so that we can track the commodities bought and sold not just the credits.
 
+1.1.20:
+- Added SkipKill2 Trackng Event for FactionKillBond Journal Event
+
+1.1.21:
+- Pushed out a debug version previously, this time, production.
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -479,7 +485,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.19"; //Version Number
+            public static string version = "1.1.21"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -2386,6 +2392,7 @@ namespace EIC_Tracker
                                     }
                                 }
                                 OverlayMissions();
+                                TrackData(Globals.cursystem, "ShipKill2", 1, line.VictimFaction.ToString(), line.Reward.ToString());
                                 break;
                             case "PVPKill":
                                 TrackData(Globals.cursystem.ToUpper(), "PVP", (int)line.CombatRank, line.Victim);
