@@ -387,6 +387,10 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.21:
 - Pushed out a debug version previously, this time, production.
 
+1.1.22:
+- Read Journal files for the Beta so that data can be sent to the server for testing.
+- If a Beta Journal file is being read, set a flag and pass that through to the server so that the server knows that's it's beta data.
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -454,6 +458,9 @@ namespace EIC_Tracker
             //Store the current file in a variable name
             public static String journalFile = "";
 
+            //Store a beta flag to pass through to server
+            public static bool liveJournal = true;
+
             //Variable to determine if we're tracking the journal or not.
             public static bool journalTracking = true;
 
@@ -485,7 +492,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.21"; //Version Number
+            public static string version = "1.1.22"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -1382,10 +1389,13 @@ namespace EIC_Tracker
             //Read the journal fast.
             //Send data slow.
 
-#if DEBUG
-            string url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
-#else
             string url = "http://tracker.eicgaming.com/trackdata.php?CMDR=" + Globals.cmdr;
+            if (!Globals.liveJournal)
+            {
+                url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
+            }
+#if DEBUG
+            url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
 #endif
 
             if (dataSystems.Tables["Tracking"].Rows.Count > 0)
@@ -1449,8 +1459,10 @@ namespace EIC_Tracker
                         DisplayHtml("Current Journal File is for the beta, however, JTracker is in debug mode so will continue.", "1");
 #else
                         //No further tracking.
-                        Globals.journalTracking = false;
-                        DisplayHtml("Current Journal File (" + Globals.journalDir + "/" + Globals.journalFile + ") is for the beta, tracking disabled until a live journal file is found.", "1");
+                        Globals.liveJournal = false;
+                        //Globals.journalTracking = false;
+                        //DisplayHtml("Current Journal File (" + Globals.journalDir + "/" + Globals.journalFile + ") is for the beta, tracking disabled until a live journal file is found.", "1");
+                        DisplayHtml("Current Journal File (" + Globals.journalDir + "/" + Globals.journalFile + ") is for the beta, tracking will continue, however, no data will be logged.", "1");
 #endif
                     }
                     
@@ -1621,7 +1633,7 @@ namespace EIC_Tracker
 #if DEBUG
                     if (true)
 #else
-                    if (line.timestamp > Globals.curtime) //If this is a current record (FSDJump processes all the time)
+                    if (line.timestamp > Globals.curtime || !Globals.liveJournal) //If this is a current record (FSDJump processes all the time)
 #endif
                     { 
                         //Update the tracker with the system control faction.
@@ -2554,7 +2566,7 @@ namespace EIC_Tracker
         {
 
             //Get all files in the directory, ordered by last write time descending, then only get the first one (the latest).
-            var sortedFiles = new DirectoryInfo(Globals.journalDir).GetFiles("Journal.*.log")
+            var sortedFiles = new DirectoryInfo(Globals.journalDir).GetFiles("Journal*.log")
                                                 .OrderByDescending(f => f.LastWriteTime)
                                                 .ToList();
             foreach (FileInfo myFile in sortedFiles)
@@ -2867,10 +2879,10 @@ namespace EIC_Tracker
             FileInfo myFile = null;
 
             //Make sure the directory has some files.
-            if (directory.GetFiles("Journal.*.log").Length > 0)
+            if (directory.GetFiles("Journal*.log").Length > 0)
             {
                 //Get all files in the directory, ordered by last write time descending, then only get the first one (the latest).
-                myFile = directory.GetFiles("Journal.*.log").OrderByDescending(f => f.LastWriteTime).First();
+                myFile = directory.GetFiles("Journal*.log").OrderByDescending(f => f.LastWriteTime).First();
 
                 //Check if the name has changed (will also fire at start up)
                 if (Globals.journalFile != myFile.Name)
