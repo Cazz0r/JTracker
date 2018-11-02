@@ -87,6 +87,7 @@
             this.dataColumn24 = new System.Data.DataColumn();
             this.dataColumn25 = new System.Data.DataColumn();
             this.dataColumn38 = new System.Data.DataColumn();
+            this.dataColumn40 = new System.Data.DataColumn();
             this.dataTable5 = new System.Data.DataTable();
             this.dataColumn26 = new System.Data.DataColumn();
             this.dataColumn27 = new System.Data.DataColumn();
@@ -552,7 +553,8 @@
             this.dataColumn23,
             this.dataColumn24,
             this.dataColumn25,
-            this.dataColumn38});
+            this.dataColumn38,
+            this.dataColumn40});
             this.dataTable4.Constraints.AddRange(new System.Data.Constraint[] {
             new System.Data.UniqueConstraint("Constraint1", new string[] {
                         "Id"}, false)});
@@ -600,6 +602,12 @@
             this.dataColumn38.AllowDBNull = false;
             this.dataColumn38.ColumnName = "Extra2";
             this.dataColumn38.DefaultValue = "";
+            // 
+            // dataColumnLive
+            // 
+            this.dataColumn40.AllowDBNull = false;
+            this.dataColumn40.ColumnName = "live";
+            this.dataColumn40.DefaultValue = false;
             // 
             // dataTable5
             // 
@@ -1166,6 +1174,7 @@
         private System.Data.DataColumn dataColumn24;
         private System.Data.DataColumn dataColumn25;
         private System.Data.DataColumn dataColumn38;
+        private System.Data.DataColumn dataColumn40;
         private System.Data.DataTable dataTable5;
         private System.Data.DataColumn dataColumn26;
         private System.Data.DataColumn dataColumn27;

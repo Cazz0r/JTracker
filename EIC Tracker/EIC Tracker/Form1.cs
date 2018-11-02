@@ -391,6 +391,12 @@ Issue with application settings (such as "Start with windows") not being persist
 - Read Journal files for the Beta so that data can be sent to the server for testing.
 - If a Beta Journal file is being read, set a flag and pass that through to the server so that the server knows that's it's beta data.
 
+1.1.23: 
+- Slight change to the passing of live/beta flag to server
+
+1.1.24:
+- Fixed a cast type
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -492,7 +498,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.22"; //Version Number
+            public static string version = "1.1.24"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -1364,6 +1370,7 @@ namespace EIC_Tracker
             TrackingData["Who"] = who;
             TrackingData["Extra"] = extra; //Extra added so that we can pass the station name.
             TrackingData["Extra2"] = extra2; //Extra added so that we can pass the station name.
+            TrackingData["Live"] = (bool)Globals.liveJournal;
             dataSystems.Tables["Tracking"].Rows.Add(TrackingData);
 
             lblTrackEntries.Text = dataSystems.Tables["Tracking"].Rows.Count.ToString();
@@ -1389,14 +1396,7 @@ namespace EIC_Tracker
             //Read the journal fast.
             //Send data slow.
 
-            string url = "http://tracker.eicgaming.com/trackdata.php?CMDR=" + Globals.cmdr;
-            if (!Globals.liveJournal)
-            {
-                url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
-            }
-#if DEBUG
-            url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
-#endif
+           
 
             if (dataSystems.Tables["Tracking"].Rows.Count > 0)
             {
@@ -1404,6 +1404,15 @@ namespace EIC_Tracker
 
                 //Get row 0.
                 DataRow row = dataSystems.Tables["Tracking"].Rows[0];
+
+                string url = "http://tracker.eicgaming.com/trackdata.php?CMDR=" + Globals.cmdr;
+                if ((string)row["Live"]=="False")
+                {
+                    url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
+                }
+#if DEBUG
+            url = "http://tracker.eicgaming.com/trackdata.php?Debug=true&CMDR=" + Globals.cmdr;
+#endif
 
                 //*
                 if ((string)row["System"] == "LOGERROR")
@@ -1455,11 +1464,11 @@ namespace EIC_Tracker
 
                     if (line.gameversion.ToUpper().Contains("BETA"))
                     {
+                        Globals.liveJournal = false;
 #if DEBUG
                         DisplayHtml("Current Journal File is for the beta, however, JTracker is in debug mode so will continue.", "1");
 #else
                         //No further tracking.
-                        Globals.liveJournal = false;
                         //Globals.journalTracking = false;
                         //DisplayHtml("Current Journal File (" + Globals.journalDir + "/" + Globals.journalFile + ") is for the beta, tracking disabled until a live journal file is found.", "1");
                         DisplayHtml("Current Journal File (" + Globals.journalDir + "/" + Globals.journalFile + ") is for the beta, tracking will continue, however, no data will be logged.", "1");
@@ -1633,7 +1642,7 @@ namespace EIC_Tracker
 #if DEBUG
                     if (true)
 #else
-                    if (line.timestamp > Globals.curtime || !Globals.liveJournal) //If this is a current record (FSDJump processes all the time)
+                    if (line.timestamp > Globals.curtime) //If this is a current record (FSDJump processes all the time)
 #endif
                     { 
                         //Update the tracker with the system control faction.
