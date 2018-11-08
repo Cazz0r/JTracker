@@ -404,6 +404,9 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.26:
 - Released a debug version (dammit)
 
+1.1.27:
+- Leave Debug mode when a live journal is detected
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -505,7 +508,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.26"; //Version Number
+            public static string version = "1.1.27"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -1486,6 +1489,9 @@ namespace EIC_Tracker
                         //DisplayHtml("Current Journal File (" + Globals.journalDir + "/" + Globals.journalFile + ") is for the beta, tracking disabled until a live journal file is found.", "1");
                         DisplayHtml("Current Journal File (" + Globals.journalDir + "/" + Globals.journalFile + ") is for the beta, tracking will continue, however, no data will be logged.", "1");
 #endif
+                    }else
+                    {
+                        Globals.liveJournal = true;
                     }
                     
                     //Ok, continue checking journal.
