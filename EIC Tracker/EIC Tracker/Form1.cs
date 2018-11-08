@@ -397,6 +397,13 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.24:
 - Fixed a cast type
 
+1.1.25:
+- Pass the entire undecoded line text through to ProcessLine.
+- STATIONFULL replaces STATION so that more data can be sent to the server (namely StationEconomies + StationType)
+
+1.1.26:
+- Released a debug version (dammit)
+
 NEW Ideas:
 - Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
 - Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
@@ -498,7 +505,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.24"; //Version Number
+            public static string version = "1.1.26"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -1080,7 +1087,13 @@ namespace EIC_Tracker
             [JsonProperty(PropertyName = "Players")]
             public dynamic Players { get; set; }
 
-            
+            //Station
+            [JsonProperty(PropertyName = "StationEconomies")]
+            public dynamic StationEconomies { get; set; }
+
+            [JsonProperty(PropertyName = "StationType")]
+            public string StationType { get; set; }
+
 
             //Permissions
             [JsonProperty(PropertyName = "BGS")]
@@ -1447,7 +1460,7 @@ namespace EIC_Tracker
 
 
 
-        public void ProcessLine(dynamic line)
+        public void ProcessLine(dynamic line, string linetext)
         {
 
             //For certain events we want to read _all the time_, for other events, make sure they happen AFTER we launched the application.
@@ -1613,12 +1626,20 @@ namespace EIC_Tracker
                 //Docked at a station.
                 case "Docked":
                     UpdateStation(line.StationName, line.StationFaction);
+#if DEBUG
+                    if (true)
+#else
                     if (line.timestamp > Globals.curtime) //If this is a current record (Docked processes all the time)
+#endif
                     {
                         if (line.StationFaction != null)
                         {
                             //Update the tracker with the station control faction.
-                            TrackData(line.StarSystem, "STATION", 0, line.StationFaction, line.StationName);
+                            //TrackData(line.StarSystem, "STATION", 0, line.StationFaction, line.StationName);
+
+                            //1.1.25: STATION replaced with STATIONFULL, so that more data can be sent to the server.
+
+                            TrackData(line.StarSystem, "STATIONFULL", 0, linetext);
                         }
                     }
                     break;
@@ -2542,7 +2563,7 @@ namespace EIC_Tracker
                         try
                         {
                             dynamic l = JsonConvert.DeserializeObject<JEvent>(lines[i]);
-                            ProcessLine(l);
+                            ProcessLine(l, lines[i]);
                         }
                         catch (JsonReaderException jex)
                         {
