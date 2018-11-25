@@ -123,6 +123,7 @@ namespace EIC_Tracker
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.btnCommodity = new System.Windows.Forms.Button();
             this.txtIFF = new System.Windows.Forms.TextBox();
+            this.txtIFFHistory = new AutoCompleteStringCollection();
             this.label5 = new System.Windows.Forms.Label();
             this.btnIFF = new System.Windows.Forms.Button();
             this.lblDonate = new System.Windows.Forms.Label();
@@ -853,9 +854,13 @@ namespace EIC_Tracker
             // 
             resources.ApplyResources(this.txtIFF, "txtIFF");
             this.txtIFF.Name = "txtIFF";
-            this.txtIFF.AutoCompleteMode = AutoCompleteMode.Append;
-            this.txtIFF.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList;
             this.txtIFF.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtIFF_KeyDown);
+            // 
+            // Setup txtIFF's autocomplete features
+            //
+            this.txtIFF.AutoCompleteMode = AutoCompleteMode.Append;
+            this.txtIFF.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            this.txtIFF.AutoCompleteCustomSource = this.txtIFFHistory;
             // 
             // label5
             // 
@@ -1183,6 +1188,10 @@ namespace EIC_Tracker
         private System.Data.DataColumn dataColumn26;
         private System.Data.DataColumn dataColumn27;
         private System.Windows.Forms.TextBox txtIFF;
+        /// <summary>
+        /// History of IFF lookups
+        /// </summary>
+        private AutoCompleteStringCollection txtIFFHistory;
         private System.Windows.Forms.Label label5;
         public System.Windows.Forms.Button btnIFF;
         private System.Windows.Forms.Label lblDonate;
