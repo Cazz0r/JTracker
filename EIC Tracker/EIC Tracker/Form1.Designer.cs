@@ -1,4 +1,6 @@
-﻿namespace EIC_Tracker
+﻿using System.Windows.Forms;
+
+namespace EIC_Tracker
 {
     partial class frmMain
     {
@@ -851,6 +853,8 @@
             // 
             resources.ApplyResources(this.txtIFF, "txtIFF");
             this.txtIFF.Name = "txtIFF";
+            this.txtIFF.AutoCompleteMode = AutoCompleteMode.Append;
+            this.txtIFF.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList;
             this.txtIFF.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtIFF_KeyDown);
             // 
             // label5
