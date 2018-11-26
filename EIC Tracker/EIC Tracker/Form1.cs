@@ -414,6 +414,9 @@ Issue with application settings (such as "Start with windows") not being persist
 - Enable auto-complete in IFF field + history (courtesy of theunkn0wn1 via PR#2)
 - Remove "Current Journal File is for the beta" text when a live journal is detected.
 
+1.1.30:
+- Forgot to increase version number...
+
 */
 using System;
 using System.Collections.Generic;
@@ -485,7 +488,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.27"; //Version Number
+            public static string version = "1.1.30"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
