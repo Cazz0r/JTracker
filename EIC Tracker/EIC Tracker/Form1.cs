@@ -407,36 +407,13 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.27:
 - Leave Debug mode when a live journal is detected
 
-NEW Ideas:
-- Splodey had the idea to record "Career Statistics". How many of x good you've brought/sold. How many missions in x system. How many of x types of passengers you've escorted. etc. May cross-over a bit with in-game statistics.
-- Tracking a series of events for operations. IE. Interdiction on Player, Cargo Abandoned, then (optional) Player Kill, then SupercruiseEntry / FSDJump. Tally 1 for Operation: Christmas, can later apply system filtering to exclude random PVP.
+1.1.28:
+- Attempted to fix a Sell Exploration Data bug
 
-Credits:
-EIC Administrators (Initial concept and testing):
-- Aluminum
-- Cazz0r
-- JaceLansing
-- LastHeroAlive
-- LiquidCatnip
-- Prax Bloodwaters (+++)
-- Quawis
-- Sainare
-- Sinsecato (+++)
-- Splodey Dope (+++)
-- Ubernostrom (+)
-- Voggix (+++)
-- WizardZombie
+1.1.29:
+- Enable auto-complete in IFF field + history (courtesy of theunkn0wn1 via PR#2)
+- Remove "Current Journal File is for the beta" text when a live journal is detected.
 
-EIC BGS Nerds:
-- Apis_Levitans
-- DuhstBunny
-- Eayrn (+++)
-- Killian Oh'Malley (+)
-- NeoTron
-- PumknNutz (+++)
-- SCSkunk
-- Swift Arrow (+++)
-- Zero_Prime
 */
 using System;
 using System.Collections.Generic;
@@ -1491,6 +1468,10 @@ namespace EIC_Tracker
 #endif
                     }else
                     {
+                        if(Globals.liveJournal == false)
+                        {
+                            wb.Navigate("http://tracker.eicgaming.com/welcome.php?CMDR=" + Globals.cmdr + "&Version=" + Globals.version);
+                        }
                         Globals.liveJournal = true;
                     }
                     
@@ -1809,7 +1790,7 @@ namespace EIC_Tracker
                                 {
                                     DataRow exploreSystem = dataSystems.Tables["StarSystems"].NewRow();
                                     exploreSystem["SystemName"] = Globals.cursystem.ToUpper();
-                                    exploreSystem["ExplorationClaimed"] = line.BaseValue + line.Bonus;
+                                    exploreSystem["ExplorationClaimed"] = Convert.ToInt64(line.BaseValue) + Convert.ToInt64(line.Bonus);
                                     dataSystems.Tables["StarSystems"].Rows.Add(exploreSystem);
                                 }
                                 else
