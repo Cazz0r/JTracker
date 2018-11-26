@@ -2822,6 +2822,8 @@ namespace EIC_Tracker
         {
             if (txtIFF.Text != "")
             {
+                // add the commander to the history for auto-completion
+                this.txtIFFHistory.Add(this.txtIFF.Text);
                 //Add a completed handler so that we know when to submit the form.
                 var url = "http://tracker.eicgaming.com/commander.php?CMDR=" + Globals.cmdr + "&x=" + Globals.cursystemx + "&y=" + Globals.cursystemy + "&z=" + Globals.cursystemz + "&System=" + Globals.cursystem + "&Version=" + Globals.version;
                 DisplayHtml("<form action='" + url + "' method='post' id='IFFForm'><textarea name='IFF' style='display:none'>" + txtIFF.Text + "</textarea><input type='hidden' name='journal' value='" + Globals.journalFile + "'><input type='hidden' name='version' value='" + Globals.version + "'><input type='submit'></form>", "1");
