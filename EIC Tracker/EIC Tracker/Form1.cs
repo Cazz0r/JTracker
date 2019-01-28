@@ -417,6 +417,23 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.30:
 - Forgot to increase version number...
 
+1.1.31:
+- Indicate that Event "RedeemVoucher"'s "Type" can be blank/unknown.
+- Support for Event "MultiSellExplorationData".
+
+1.1.32:
+- Changed SystemFaction + StationFaction to be objects rather than strings. https://forums.frontier.co.uk/showthread.php/452937-Journal-Docs-for-v3-3?p=7374400&viewfull=1#post7374400
+- Where used, discard the SystemFaction + StationFaction objects, as we only need the object.Name string.
+
+1.1.33: 
+- Added a check for type of SystemFaction + StationFaction, it looks like game clients where still sending the string version rather than the object version.
+
+1.1.34:
+- Forgot to increment JTracker version number
+
+1.1.35: 
+- Ensure that we actually have a SystemFaction or StationFaction before we try type checking it. Vast majority of space is uninhabited and thus missing "SystemFaction" parameter.
+
 */
 using System;
 using System.Collections.Generic;
@@ -488,7 +505,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.30"; //Version Number
+            public static string version = "1.1.35"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -871,10 +888,10 @@ namespace EIC_Tracker
             public string Faction { get; set; }
 
             [JsonProperty(PropertyName = "StationFaction")]
-            public string StationFaction { get; set; }
+            public dynamic StationFaction { get; set; }
 
             [JsonProperty(PropertyName = "SystemFaction")]
-            public string SystemFaction { get; set; }
+            public dynamic SystemFaction { get; set; }
 
             [JsonProperty(PropertyName = "MissionID")]
             public string MissionID { get; set; }
@@ -1554,13 +1571,24 @@ namespace EIC_Tracker
                     */
                     break;
                 case "Location":
+
+                    if (line.SystemFaction != null)
+                    {
+                        dynamic SystemFactionType = line.SystemFaction.GetType();
+                        if (SystemFactionType.Name != "String")
+                        {
+                            line.SystemFaction = (string)line.SystemFaction.Name;
+                        }
+                    }
+
+
                     UpdateSystem(line.StarSystem, line.StarPos[0], line.StarPos[1], line.StarPos[2], line.SystemFaction);
                     if (line.Docked == "true")
                     {
                         UpdateStation(line.StationName, ""); //The location event does not have a StationFaction presented, but if Docked, the Docked event follows immediately after which does.
                     }
 
-                    if (line.timestamp > Globals.curtime) //If this is a current record (FSDJump processes all the time)
+                    if (line.timestamp >= Globals.curtime) //If this is a current record (FSDJump processes all the time)
                     {
                         //Update the tracker with the system control faction.
                         if (line.SystemFaction != null)
@@ -1615,11 +1643,21 @@ namespace EIC_Tracker
 
                 //Docked at a station.
                 case "Docked":
+
+                    if (line.StationFaction != null)
+                    {
+                        dynamic StationFactionType = line.StationFaction.GetType();
+                        if (StationFactionType.Name != "String")
+                        {
+                            line.StationFaction = (string)line.StationFaction.Name;
+                        }
+                    }
+
                     UpdateStation(line.StationName, line.StationFaction);
 #if DEBUG
                     if (true)
 #else
-                    if (line.timestamp > Globals.curtime) //If this is a current record (Docked processes all the time)
+                    if (line.timestamp >= Globals.curtime) //If this is a current record (Docked processes all the time)
 #endif
                     {
                         if (line.StationFaction != null)
@@ -1649,11 +1687,20 @@ namespace EIC_Tracker
                     break;
                 //Jumped to another system, update the Current system.
                 case "FSDJump":
+
+                    if (line.SystemFaction != null)
+                    {
+                        dynamic FSDSystemFactionType = line.SystemFaction.GetType();
+                        if (FSDSystemFactionType.Name != "String")
+                        {
+                            line.SystemFaction = (string)line.SystemFaction.Name;
+                        }
+                    }
                     UpdateSystem(line.StarSystem, line.StarPos[0], line.StarPos[1], line.StarPos[2], line.SystemFaction);
 #if DEBUG
                     if (true)
 #else
-                    if (line.timestamp > Globals.curtime) //If this is a current record (FSDJump processes all the time)
+                    if (line.timestamp >= Globals.curtime) //If this is a current record (FSDJump processes all the time)
 #endif
                     { 
                         //Update the tracker with the system control faction.
@@ -1710,9 +1757,9 @@ namespace EIC_Tracker
                     
 #if DEBUG
                         if (true)
-                        //if (line.timestamp > Globals.curtime)
+                        //if (line.timestamp >= Globals.curtime)
 #else
-                        if (line.timestamp > Globals.curtime)
+                        if (line.timestamp >= Globals.curtime)
                         //if (true)
 #endif
                         {
@@ -1786,6 +1833,7 @@ namespace EIC_Tracker
                                     TrackData(Globals.cursystem, "ShipKill", 1, line.VictimFaction.ToString(), line.TotalReward.ToString(), line.Target.ToString());
                                 }
                                 break;
+                            case "MultiSellExplorationData":
                             case "SellExplorationData":
                                 //For the Current system: +BaseValue to ExplorationClaimed.
                                 DataRow ExploreSystem = dataSystems.Tables["StarSystems"].Rows.Find(Globals.cursystem.ToUpper());
@@ -2332,7 +2380,7 @@ namespace EIC_Tracker
                                         TrackData(Globals.cursystem.ToUpper(), "Voucher", Convert.ToInt64(line.Amount), Globals.curstationfaction);
                                         break;
                                     default:
-                                        TrackData(Globals.cursystem.ToUpper(), (string)line.Type.ToUpper(), Convert.ToInt64(line.Amount), Globals.curstationfaction);
+                                        TrackData(Globals.cursystem.ToUpper(), "Unknown Voucher: " + (string)line.Type.ToUpper(), Convert.ToInt64(line.Amount), Globals.curstationfaction);
 
                                         //Unknown claim type...
                                         //wb.Document.Write("Unknown Claim Type: " + (string)line.Type.ToUpper() + "<br>Let Cazz0r know!");
