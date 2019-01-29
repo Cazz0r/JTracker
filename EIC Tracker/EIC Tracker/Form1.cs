@@ -434,6 +434,9 @@ Issue with application settings (such as "Start with windows") not being persist
 1.1.35: 
 - Ensure that we actually have a SystemFaction or StationFaction before we try type checking it. Vast majority of space is uninhabited and thus missing "SystemFaction" parameter.
 
+1.1.36:
+- Commodity Search refinements. Pull list of commodities from ED:MC's commodity.csv.
+
 */
 using System;
 using System.Collections.Generic;
@@ -505,7 +508,7 @@ namespace EIC_Tracker
             public static string curgroup = "";
 
             //A variable for the version.
-            public static string version = "1.1.35"; //Version Number
+            public static string version = "1.1.36"; //Version Number
 
             //Variable for the program open time.
             public static DateTime curtime = DateTime.UtcNow;
@@ -2868,43 +2871,6 @@ namespace EIC_Tracker
             {
                 var commtext = cmbCommodity.SelectedItem.ToString();
 
-                switch (commtext.ToUpper())
-                {
-                    case "ATMOSPHERIC PROCESSORS":
-                        commtext = "Atmospheric Extractors";
-                        break;
-
-                    case "BIOREDUCING LICHEN":
-                        commtext = "Bio Reducing Lichen";
-                        break;
-
-                    case "ANIMALMEAT":
-                        commtext = "Animal Meat";
-                        break;
-
-                    case "CMM COMPOSITE":
-                    case "C M M COMPOSITE":
-                    case "C.M.M. COMPOSITE":
-                        commtext = "CMM Composite";
-                        break;
-
-                    case "HN SHOCKMOUNT":
-                    case "H N SHOCKMOUNT":
-                    case "H.N. SHOCKMOUNT":
-                        commtext = "HN Shock Mount";
-                        break;
-
-                    case "HE SUITS":
-                    case "H E SUITS":
-                    case "H.E. SUITS":
-                        commtext = "Hazardous Environment Suits";
-                        break;
-                    case "LAND ENRICHMENT SYSTEMS":
-                        commtext = "Terrain Enrichment Systems";
-                        break;
-                }
-
-
                 var url = "http://tracker.eicgaming.com/commodity.php?CMDR=" + Globals.cmdr + "&Commodity=" + commtext + "&x=" + Globals.cursystemx + "&y=" + Globals.cursystemy + "&z=" + Globals.cursystemz + "&System=" + Globals.cursystem + "&Version=" + Globals.version;
                 if (Globals.curstation != "")
                 {
@@ -3293,186 +3259,36 @@ namespace EIC_Tracker
         private void ListCommodities()
         {
             cmbCommodity.Items.Clear();
-            cmbCommodity.Items.Add("Advanced Catalysers");
-            cmbCommodity.Items.Add("Advanced Medicines");
-            cmbCommodity.Items.Add("Agricultural Medicines");
-            cmbCommodity.Items.Add("Ai Relics");
-            cmbCommodity.Items.Add("Algae");
-            cmbCommodity.Items.Add("Aluminium");
-            cmbCommodity.Items.Add("Animal Meat");
-            cmbCommodity.Items.Add("Animal Monitors");
-            cmbCommodity.Items.Add("Animalmeat");
-            cmbCommodity.Items.Add("Antiquities");
-            cmbCommodity.Items.Add("Aquaponic Systems");
-            cmbCommodity.Items.Add("Articulation Motors");
-            cmbCommodity.Items.Add("Atmospheric Extractors");
-            cmbCommodity.Items.Add("Atmospheric Processors");
-            cmbCommodity.Items.Add("Auto Fabricators");
-            cmbCommodity.Items.Add("Basic Medicines");
-            cmbCommodity.Items.Add("Basic Narcotics");
-            cmbCommodity.Items.Add("Battle Weapons");
-            cmbCommodity.Items.Add("Bauxite");
-            cmbCommodity.Items.Add("Beer");
-            cmbCommodity.Items.Add("Bertrandite");
-            cmbCommodity.Items.Add("Beryllium");
-            cmbCommodity.Items.Add("Bio Reducing Lichen");
-            cmbCommodity.Items.Add("Bioreducing Lichen");
-            cmbCommodity.Items.Add("Biowaste");
-            cmbCommodity.Items.Add("Bismuth");
-            cmbCommodity.Items.Add("Bootleg Liquor");
-            cmbCommodity.Items.Add("Bromellite");
-            cmbCommodity.Items.Add("Building Fabricators");
-            cmbCommodity.Items.Add("C M M Composite");
-            cmbCommodity.Items.Add("C.M.M. Composite");
-            cmbCommodity.Items.Add("CMM Composite");
-            cmbCommodity.Items.Add("Ceramic Composites");
-            cmbCommodity.Items.Add("Chemical Waste");
-            cmbCommodity.Items.Add("Clothing");
-            cmbCommodity.Items.Add("Cobalt");
-            cmbCommodity.Items.Add("Coffee");
-            cmbCommodity.Items.Add("Coltan");
-            cmbCommodity.Items.Add("Combat Stabilisers");
-            cmbCommodity.Items.Add("Computer Components");
-            cmbCommodity.Items.Add("Conductive Fabrics");
-            cmbCommodity.Items.Add("Consumer Technology");
-            cmbCommodity.Items.Add("Cooling Hoses");
-            cmbCommodity.Items.Add("Copper");
-            cmbCommodity.Items.Add("Crop Harvesters");
-            cmbCommodity.Items.Add("Cryolite");
-            cmbCommodity.Items.Add("Data Core");
-            cmbCommodity.Items.Add("Deuringas Truffles");
-            cmbCommodity.Items.Add("Diagnostic Sensor");
-            cmbCommodity.Items.Add("Domestic Appliances");
-            cmbCommodity.Items.Add("Drones");
-            cmbCommodity.Items.Add("Emergency Power Cells");
-            cmbCommodity.Items.Add("Energy Grid Assembly");
-            cmbCommodity.Items.Add("Esuseku Caviar");
-            cmbCommodity.Items.Add("Evacuation Shelter");
-            cmbCommodity.Items.Add("Exhaust Manifold");
-            cmbCommodity.Items.Add("Explosives");
-            cmbCommodity.Items.Add("Fish");
-            cmbCommodity.Items.Add("Food Cartridges");
-            cmbCommodity.Items.Add("Fruit And Vegetables");
-            cmbCommodity.Items.Add("Galactic Travel Guide");
-            cmbCommodity.Items.Add("Gallite");
-            cmbCommodity.Items.Add("Gallium");
-            cmbCommodity.Items.Add("Geological Equipment");
-            cmbCommodity.Items.Add("Gold");
-            cmbCommodity.Items.Add("Goslarite");
-            cmbCommodity.Items.Add("Grain");
-            cmbCommodity.Items.Add("H E Suits");
-            cmbCommodity.Items.Add("H N Shock Mount");
-            cmbCommodity.Items.Add("H.E. Suits");
-            cmbCommodity.Items.Add("H.N. Shock Mount");
-            cmbCommodity.Items.Add("HE Suits");
-            cmbCommodity.Items.Add("HN Shock Mount");
-            cmbCommodity.Items.Add("Hafnium178");
-            cmbCommodity.Items.Add("Hardware Diagnostic Sensor");
-            cmbCommodity.Items.Add("Hazardous Environment Suits");
-            cmbCommodity.Items.Add("Heatsink Interlink");
-            cmbCommodity.Items.Add("Heliostatic Furnaces");
-            cmbCommodity.Items.Add("Hydrogen Fuel");
-            cmbCommodity.Items.Add("Hydrogen Peroxide");
-            cmbCommodity.Items.Add("Imperial Slaves");
-            cmbCommodity.Items.Add("Indite");
-            cmbCommodity.Items.Add("Indium");
-            cmbCommodity.Items.Add("Insulating Membrane");
-            cmbCommodity.Items.Add("Ion Distributor");
-            cmbCommodity.Items.Add("Jadeite");
-            cmbCommodity.Items.Add("Land Enrichment Systems");
-            cmbCommodity.Items.Add("Landmines");
-            cmbCommodity.Items.Add("Lanthanum");
-            cmbCommodity.Items.Add("Leather");
-            cmbCommodity.Items.Add("Lepidolite");
-            cmbCommodity.Items.Add("Liquid Oxygen");
-            cmbCommodity.Items.Add("Liquor");
-            cmbCommodity.Items.Add("Lithium");
-            cmbCommodity.Items.Add("Lithium Hydroxide");
-            cmbCommodity.Items.Add("Low Temperature Diamond");
-            cmbCommodity.Items.Add("Magnetic Emitter Coil");
-            cmbCommodity.Items.Add("Marine Supplies");
-            cmbCommodity.Items.Add("Medical Diagnostic Equipment");
-            cmbCommodity.Items.Add("Meta Alloys");
-            cmbCommodity.Items.Add("Methane Clathrate");
-            cmbCommodity.Items.Add("Methanol Monohydrate");
-            cmbCommodity.Items.Add("Methanol Monohydrate Crystals");
-            cmbCommodity.Items.Add("Micro Controllers");
-            cmbCommodity.Items.Add("Micro-Weave Cooling Hoses");
-            cmbCommodity.Items.Add("Military Grade Fabrics");
-            cmbCommodity.Items.Add("Military Intelligence");
-            cmbCommodity.Items.Add("Mineral Extractors");
-            cmbCommodity.Items.Add("Mineral Oil");
-            cmbCommodity.Items.Add("Modular Terminals");
-            cmbCommodity.Items.Add("Moissanite");
-            cmbCommodity.Items.Add("Mu Tom Imager");
-            cmbCommodity.Items.Add("Nanobreakers");
-            cmbCommodity.Items.Add("Narcotics");
-            cmbCommodity.Items.Add("Natural Fabrics");
-            cmbCommodity.Items.Add("Neofabric Insulation");
-            cmbCommodity.Items.Add("Nerve Agents");
-            cmbCommodity.Items.Add("Non Lethal Weapons");
-            cmbCommodity.Items.Add("Occupied Cryo Pod");
-            cmbCommodity.Items.Add("Osmium");
-            cmbCommodity.Items.Add("Painite");
-            cmbCommodity.Items.Add("Palladium");
-            cmbCommodity.Items.Add("Performance Enhancers");
-            cmbCommodity.Items.Add("Personal Gifts");
-            cmbCommodity.Items.Add("Personal Weapons");
-            cmbCommodity.Items.Add("Pesticides");
-            cmbCommodity.Items.Add("Platinum");
-            cmbCommodity.Items.Add("Polymers");
-            cmbCommodity.Items.Add("Power Converter");
-            cmbCommodity.Items.Add("Power Generators");
-            cmbCommodity.Items.Add("Power Grid Assembly");
-            cmbCommodity.Items.Add("Power Transfer Conduits");
-            cmbCommodity.Items.Add("Praseodymium");
-            cmbCommodity.Items.Add("Progenitor Cells");
-            cmbCommodity.Items.Add("Pyrophyllite");
-            cmbCommodity.Items.Add("Radiation Baffle");
-            cmbCommodity.Items.Add("Reactive Armour");
-            cmbCommodity.Items.Add("Reinforced Mounting Plate");
-            cmbCommodity.Items.Add("Resonating Separators");
-            cmbCommodity.Items.Add("Robotics");
-            cmbCommodity.Items.Add("Rutile");
-            cmbCommodity.Items.Add("Samarium");
-            cmbCommodity.Items.Add("Scrap");
-            cmbCommodity.Items.Add("Semiconductors");
-            cmbCommodity.Items.Add("Silver");
-            cmbCommodity.Items.Add("Skimer Components");
-            cmbCommodity.Items.Add("Slaves");
-            cmbCommodity.Items.Add("Structural Regulators");
-            cmbCommodity.Items.Add("Superconductors");
-            cmbCommodity.Items.Add("Surface Stabilisers");
-            cmbCommodity.Items.Add("Survival Equipment");
-            cmbCommodity.Items.Add("Synthetic Fabrics");
-            cmbCommodity.Items.Add("Synthetic Meat");
-            cmbCommodity.Items.Add("Synthetic Reagents");
-            cmbCommodity.Items.Add("Taaffeite");
-            cmbCommodity.Items.Add("Tantalum");
-            cmbCommodity.Items.Add("Tea");
-            cmbCommodity.Items.Add("Telemetry Suite");
-            cmbCommodity.Items.Add("Terrain Enrichment Systems");
-            cmbCommodity.Items.Add("Thallium");
-            cmbCommodity.Items.Add("Thermal Cooling Units");
-            cmbCommodity.Items.Add("Thorium");
-            cmbCommodity.Items.Add("Thrutis Cream");
-            cmbCommodity.Items.Add("Titanium");
-            cmbCommodity.Items.Add("Tobacco");
-            cmbCommodity.Items.Add("U S S Cargo Ancient Artefact");
-            cmbCommodity.Items.Add("U S S Cargo Experimental Chemicals");
-            cmbCommodity.Items.Add("U S S Cargo Military Plans");
-            cmbCommodity.Items.Add("U S S Cargo Prototype Tech");
-            cmbCommodity.Items.Add("U S S Cargo Rebel Transmissions");
-            cmbCommodity.Items.Add("U S S Cargo Technical Blueprints");
-            cmbCommodity.Items.Add("U S S Cargo Trade Data");
-            cmbCommodity.Items.Add("Unknown Artifact");
-            cmbCommodity.Items.Add("Unknown Artifact2");
-            cmbCommodity.Items.Add("Uraninite");
-            cmbCommodity.Items.Add("Uranium");
-            cmbCommodity.Items.Add("Water");
-            cmbCommodity.Items.Add("Water Purifiers");
-            cmbCommodity.Items.Add("Wine");
-            cmbCommodity.Items.Add("Wreckage Components");
+
+            byte[] commoditycsv = null;
+            MemoryStream ms;
+            ms = null;
+
+            try
+            {
+                using (var wc = new System.Net.WebClient())
+                {
+                    commoditycsv = wc.DownloadData("https://raw.githubusercontent.com/Marginal/EDMarketConnector/master/commodity.csv");
+                }
+                ms = new MemoryStream(commoditycsv);
+
+                StreamReader objstream = new StreamReader(ms);
+                while (objstream.Peek() >= 0)
+                {
+                    dynamic Parts = objstream.ReadLine().Split(new char[] { ',' });
+                    if (Parts[3] != "name" && Parts[3] != "" && Parts[3] != " ") {
+                        cmbCommodity.Items.Add(Parts[3]);
+                    }
+                }
+                cmbCommodity.Sorted = true;
+            }
+            catch (Exception)
+            {
+                //forbidden, proxy issues, file not found (404) etc
+                //No Commodities I guess.
+            }
+
+           
         }
         public static void OverlayMissions()
         {
